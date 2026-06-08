@@ -25,7 +25,7 @@ from datetime import date, timedelta
 # Configuration — edit these three values before running
 # ---------------------------------------------------------------------------
 
-STATION = "LBEAR"
+STATION = ("CNDLK")
 START_DATE = date(2026, 5, 1)
 END_DATE = date.today()
 
