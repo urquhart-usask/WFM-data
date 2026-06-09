@@ -15,6 +15,7 @@ Configure STATIONS and DAYS below, then run directly in PyCharm
 import csv
 import json
 import re
+import ssl
 import sys
 import time
 import urllib.request
@@ -70,9 +71,13 @@ def fetch_window(station: str, anchor_date: date) -> list[tuple[str, str]]:
     )
 
     req = urllib.request.Request(url, headers=HEADERS)
+    # wfm.gov.sk.ca uses a self-signed cert; bypass verification
+    ssl_ctx = ssl.create_default_context()
+    ssl_ctx.check_hostname = False
+    ssl_ctx.verify_mode = ssl.CERT_NONE
 
     try:
-        with urllib.request.urlopen(req, timeout=15) as resp:
+        with urllib.request.urlopen(req, timeout=15, context=ssl_ctx) as resp:
             raw = resp.read().decode("utf-8")
     except Exception as exc:
         print(f"  Warning: request failed for {station} {anchor_date} - {exc}", file=sys.stderr)
