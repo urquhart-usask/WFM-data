@@ -1,4 +1,4 @@
-
+#!/usr/bin/env python3
 """
 wfm_rainfall.py
 
@@ -19,6 +19,7 @@ import sys
 import time
 import urllib.request
 from datetime import date, timedelta
+from pathlib import Path
 
 # ---------------------------------------------------------------------------
 # Configuration — edit these values before running
@@ -26,6 +27,8 @@ from datetime import date, timedelta
 
 STATIONS = ["WGULL", "CNDLK", "STURT", "LBEAR"]
 DAYS = 7
+CSV_WRITE = True
+OUTPUT_DIR = Path.home() / "Documents"
 END_DATE = date.today()
 START_DATE = END_DATE - timedelta(days=DAYS - 1)
 
@@ -146,12 +149,29 @@ def daily_totals(hourly_rain: dict[str, str]) -> dict[str, float]:
     return totals
 
 
-def write_csv(rows: list[dict], output_path: str) -> None:
+def print_table(rows: list[dict]) -> None:
+    col_width = max(10, *(len(s) for s in STATIONS))
+    date_width = 10
+    header = f"{'Date':<{date_width}}" + "".join(f"  {s:>{col_width}}" for s in STATIONS)
+    separator = "-" * len(header)
+    print()
+    print(header)
+    print(separator)
+    for row in rows:
+        line = f"{row['date']:<{date_width}}"
+        for station in STATIONS:
+            line += f"  {row[station]:>{col_width}}"
+        print(line)
+    print(separator)
+
+
+def write_csv(rows: list[dict], filename: str) -> None:
+    output_path = OUTPUT_DIR / filename
     with open(output_path, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=OUTPUT_COLUMNS)
         writer.writeheader()
         writer.writerows(rows)
-    print(f"\nWrote {len(rows)} rows to {output_path}")
+    print(f"Wrote {len(rows)} rows to {output_path}")
 
 
 # ---------------------------------------------------------------------------
@@ -159,11 +179,10 @@ def write_csv(rows: list[dict], output_path: str) -> None:
 # ---------------------------------------------------------------------------
 
 def main():
-    output = f"daily_rainfall_{START_DATE.isoformat()}_{END_DATE.isoformat()}.csv"
+    filename = f"daily_rainfall_{START_DATE.isoformat()}_{END_DATE.isoformat()}.csv"
 
     print(f"Stations : {', '.join(STATIONS)}")
     print(f"Range    : {START_DATE} to {END_DATE}")
-    print(f"Output   : {output}")
     print()
 
     by_station = {}
@@ -184,8 +203,11 @@ def main():
         for station in STATIONS:
             row[station] = round(by_station[station].get(day, 0.0), 1)
         table_rows.append(row)
+    print(filename)
+    print_table(table_rows)
+    if CSV_WRITE:
+        write_csv(table_rows, filename)
 
-    write_csv(table_rows, output)
     print("Done.")
 
 
