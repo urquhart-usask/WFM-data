@@ -11,8 +11,11 @@ from wfm_core import COLUMNS, KNOWN_STATIONS, fetch_range
 st.title("Hourly observations")
 st.caption(
     "Fetches hourly observations from wfm.gov.sk.ca for a station and "
-    "date range, and serves the result as a CSV download."
+    "date range, and serves the result as a CSV download. "
+    "For map locations see "
+    "[map](https://www.google.com/maps/d/viewer?mid=1eW3c60_puJdNp8DtBe_Nx386gOIVSsI&femb=1&ll=58.1293829607758%2C-96.73329985&z=3)."
 )
+
 
 station_choice = st.selectbox("Station", KNOWN_STATIONS + ["Other..."])
 if station_choice == "Other...":

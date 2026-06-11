@@ -11,7 +11,9 @@ from wfm_core import KNOWN_STATIONS, daily_rain_totals, fetch_range, window_coun
 st.title("Daily rainfall totals")
 st.caption(
     "Sums hourly rainfall from wfm.gov.sk.ca into daily totals per "
-    "station — one row per date, one column per station."
+    "station — one row per date, one column per station. "
+    "For map locations see "
+    "[map](https://www.google.com/maps/d/viewer?mid=1eW3c60_puJdNp8DtBe_Nx386gOIVSsI&femb=1&ll=58.1293829607758%2C-96.73329985&z=3)."
 )
 
 stations = st.multiselect("Stations", KNOWN_STATIONS, default=KNOWN_STATIONS)
