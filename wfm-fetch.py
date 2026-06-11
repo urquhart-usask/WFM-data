@@ -27,11 +27,11 @@ from datetime import date, timedelta
 
 
 
-STATION = ("WGULL")
+#STATION = ("WGULL")
 #STATION = ("STURT")
 #STATION = ("LBEAR")
-#STATION = ("CNDLK")
-START_DATE = date(2026, 6, 1)
+STATION = ("CNDLK")
+START_DATE = date(2026, 4, 1)
 END_DATE = date.today()
 
 # ---------------------------------------------------------------------------
